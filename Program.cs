@@ -114,7 +114,7 @@ namespace FindDublicateFiles
             }
             catch (System.UnauthorizedAccessException ex)
             {
-                Console.WriteLine("Given directory is not accessable.");
+                Console.WriteLine("Given directory is not accessible.");
                 Environment.Exit(0);
             }
             return files;
