@@ -9,42 +9,45 @@ namespace FindDublicateFiles
     internal class Program
     {
         private static readonly MD5 Md5 = MD5.Create();
-        private static string location = "C:\\";
+        private static string location = "";
         private static string extensions = "";
         static void Main(string[] args)
         {
-            CheckUserParameters(args);
+            if (CheckUserParameters(args))
+            {
+                Console.WriteLine("The program processing is depending on the number of files Or the size of the files.");
+                Console.WriteLine("Duplication Finding Process Started.");
 
-            List<string> files = GetAllFiles(location, GetExtensions(extensions));
+                List<string> files = GetAllFiles(location, GetExtensions(extensions));
 
-            Dictionary<string, List<string>> result = FindDuplicate(files);
+                Dictionary<string, List<string>> result = FindDuplicate(files);
 
-            WriteDuplicationResult(result);
+                WriteDuplicationResult(result);
+            }
         }
-        private static void CheckUserParameters(string[] args)
+        private static bool CheckUserParameters(string[] args)
         {
             if (args.Length == 0)
             {
                 Console.WriteLine("You must enter the location");
                 Console.WriteLine("File extensions must be comma separated for example to filter mp4 And txt files you must type mp4,txt AFTER directory");
-
-                return;
+                return false;
             }
             else if (args.Length == 1)
             {
                 location = args[0];
-                IsValidDirectory(location);
+                return IsValidDirectory(location);
             }
             else if (args.Length == 2)
             {
                 location = args[0];
-                IsValidDirectory(location);
-                extensions = args[1];
-                IsValidExtensions(extensions);
+                if (IsValidDirectory(location))
+                {
+                    extensions = args[1];
+                    return IsValidExtensions(extensions);
+                }
             }
-
-            Console.WriteLine("The program processing is depending on the number of files Or the size of the files.");
-            Console.WriteLine("Duplication Finding Process Started.");
+            return false;
         }
         private static Dictionary<string, List<string>> FindDuplicate(List<string> files)
         {
@@ -79,8 +82,12 @@ namespace FindDublicateFiles
 
             StreamWriter sw = File.CreateText("Duplication Result.txt");
 
-            foreach (string key in result.Keys) {
-                if (result[key].Count > 1) {
+            foreach (string key in result.Keys)
+            {
+                string s = Path.GetFileName(result[key][0]);
+                if (result[key].Count > 1)
+                {
+                    sw.WriteLine(s);
                     foreach (string value in result[key])
                         sw.WriteLine("\t\t" + value);
                 }
@@ -91,13 +98,25 @@ namespace FindDublicateFiles
         }
         private static List<string> GetExtensions(string extensions)
         {
+            if (string.IsNullOrEmpty(extensions))
+                return new List<string>();
             return extensions.Split(new char[] { ',' }).ToList();
         }
         private static List<string> GetAllFiles(string directory, List<string> ext)
         {
-            List<string> files = Directory.GetFiles(directory, "", SearchOption.AllDirectories).ToList();
-            if(ext.Count > 0)
-                files = FilterFiles(files, ext);
+            List<string> files = null;
+            try
+            {
+               File.SetAttributes(directory, FileAttributes.Normal);
+                files = Directory.GetFiles(directory, "", SearchOption.AllDirectories).ToList();
+                if (ext.Count > 0)
+                    files = FilterFiles(files, ext);
+            }
+            catch (System.UnauthorizedAccessException ex)
+            {
+                Console.WriteLine("Given directory is not accessable.");
+                Environment.Exit(0);
+            }
             return files;
         }
         private static List<string> FilterFiles(List<string> files, List<string> acceptedExtensions)
@@ -120,21 +139,23 @@ namespace FindDublicateFiles
             foreach (byte b in bytes) result += b.ToString("x2");
             return result;
         }
-        public static void IsValidDirectory(string directory)
+        public static bool IsValidDirectory(string directory)
         {
             if (!Directory.Exists(directory))
             {
                 Console.WriteLine("You provided invalid directory.");
-                return;
+                return false;
             }
+            return true;
         }
-        public static void IsValidExtensions(string extensions)
+        private static bool IsValidExtensions(string extensions)
         {
             if (string.IsNullOrEmpty(extensions))
             {
                 Console.WriteLine("You provided invalid extensions.");
-                return;
+                return false;
             }
+            return true;
         }
     }
 }
