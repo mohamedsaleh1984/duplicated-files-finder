@@ -133,13 +133,13 @@ namespace DuplicatedFilesFinder
             using (FileStream stream = File.OpenRead(filename))
                 return Md5.ComputeHash(stream);
         }
-        public static string GetFileHash(byte[] bytes)
+        private static string GetFileHash(byte[] bytes)
         {
             string result = "";
             foreach (byte b in bytes) result += b.ToString("x2");
             return result;
         }
-        public static bool IsValidDirectory(string directory)
+        private static bool IsValidDirectory(string directory)
         {
             if (!Directory.Exists(directory))
             {
