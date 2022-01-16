@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Linq;
 
-namespace FindDublicateFiles
+namespace DuplicatedFilesFinder
 {
     internal class Program
     {
