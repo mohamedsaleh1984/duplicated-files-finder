@@ -146,6 +146,11 @@ namespace DuplicatedFilesFinder
                 Console.WriteLine("You provided invalid directory.");
                 return false;
             }
+            if (directory.Contains(" "))
+            {
+                Console.WriteLine("You should not provide any directory with spaces.");
+                return false;
+            }
             return true;
         }
         private static bool IsValidExtensions(string extensions)
