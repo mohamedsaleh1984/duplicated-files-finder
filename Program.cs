@@ -17,7 +17,7 @@ namespace DuplicatedFilesFinder
             if (CheckUserParameters(args))
             {
                 Console.WriteLine("The program processing is depending on the number of files Or the size of the files.");
-                Console.WriteLine("Duplication Finding Process Started.");
+                Console.WriteLine("Duplication Finding Process Started...Please wait.");
 
                 List<string> files = GetAllFiles(location, GetExtensions(extensions));
 
