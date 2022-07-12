@@ -11,6 +11,7 @@ namespace DuplicatedFilesFinder
         private static readonly MD5 Md5 = MD5.Create();
         private static string location = "";
         private static string extensions = "";
+        private static readonly string DUPLICATE_FILE_NAME = "duplicate_find_result.txt";
         static void Main(string[] args)
         {
             if (CheckUserParameters(args))
@@ -77,10 +78,10 @@ namespace DuplicatedFilesFinder
         {
             Console.WriteLine("Writing Duplication Results...");
 
-            if (File.Exists("Duplication Result.txt"))
-                File.Delete("Duplication Result.txt");
+            if (File.Exists(DUPLICATE_FILE_NAME))
+                File.Delete(DUPLICATE_FILE_NAME);
 
-            StreamWriter sw = File.CreateText("Duplication Result.txt");
+            StreamWriter sw = File.CreateText(DUPLICATE_FILE_NAME);
 
             foreach (string key in result.Keys)
             {
