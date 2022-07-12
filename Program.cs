@@ -11,12 +11,13 @@ namespace DuplicatedFilesFinder
         private static readonly MD5 Md5 = MD5.Create();
         private static string location = "";
         private static string extensions = "";
+        private static readonly string DUPLICATE_FILE_NAME = "duplicate_find_result.txt";
         static void Main(string[] args)
         {
             if (CheckUserParameters(args))
             {
                 Console.WriteLine("The program processing is depending on the number of files Or the size of the files.");
-                Console.WriteLine("Duplication Finding Process Started.");
+                Console.WriteLine("Duplication Finding Process Started...Please wait.");
 
                 List<string> files = GetAllFiles(location, GetExtensions(extensions));
 
@@ -77,10 +78,10 @@ namespace DuplicatedFilesFinder
         {
             Console.WriteLine("Writing Duplication Results...");
 
-            if (File.Exists("Duplication Result.txt"))
-                File.Delete("Duplication Result.txt");
+            if (File.Exists(DUPLICATE_FILE_NAME))
+                File.Delete(DUPLICATE_FILE_NAME);
 
-            StreamWriter sw = File.CreateText("Duplication Result.txt");
+            StreamWriter sw = File.CreateText(DUPLICATE_FILE_NAME);
 
             foreach (string key in result.Keys)
             {
